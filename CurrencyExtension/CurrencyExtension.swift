@@ -1,3 +1,4 @@
+import CurrencyCore
 import Foundation
 import TunaKit
 
@@ -12,9 +13,10 @@ public final class CurrencyExtension: Extension {
         iconName: "coloncurrencysign"
       ),
       compatibility: ExtensionDeclarationCompatibility(
-        minTuna: "0.80",
-        minTunaKit: "1.14.0"
+        minTuna: "0.110",
+        minTunaKit: "1.22.0"
       ),
+      settings: [CurrencySettings.defaultTarget],
       actionCatalogs: [
         ActionCatalogDeclaration(
           id: "currency.actions",
@@ -23,5 +25,29 @@ public final class CurrencyExtension: Extension {
         )
       ]
     )
+  }
+}
+
+enum CurrencySettings {
+  /// Action catalogs still cannot declare settings. This lives on the extension and shows
+  /// on the Currency page in Settings → Sources.
+  static let defaultTarget = CatalogSettingDefinition(
+    key: "DefaultTargetCurrency",
+    type: .string,
+    label: "Default target currency",
+    defaultValue: "EUR",
+    description: "Used when the text has an amount and source but no target, such as 100 usd.",
+    options: CurrencyCode.knownCodes.sorted().map {
+      CatalogSettingDefinition.Option(value: $0, label: $0)
+    }
+  )
+
+  static func defaultTargetText() -> String {
+    let identifier = Bundle(for: CurrencyExtension.self).bundleIdentifier
+      ?? "com.masalaempire.tuna.plugins.currency"
+    let store = CatalogSettingStore(catalogIdentifier: identifier)
+    let value = store.stringValue(for: defaultTarget)
+      .trimmingCharacters(in: .whitespacesAndNewlines)
+    return CurrencyCode(parsing: value)?.rawValue ?? defaultTarget.defaultValue
   }
 }

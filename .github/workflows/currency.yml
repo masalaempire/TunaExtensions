@@ -15,9 +15,12 @@ jobs:
     name: currency (macos-15)
     # GitHub cancelled both macos-15 and macos-15-intel before a runner accepted
     # them. macos-26-intel did accept a job. The extension still deploys to macOS 15
-    # and the image's Xcode is 16+.
+    # and the image's Xcode is 16+. This job is manual only and is not a pull-request check.
     runs-on: macos-26-intel
     timeout-minutes: 30
+    permissions:
+      contents: read
+      actions: write
 
     steps:
       - name: Checkout code
@@ -28,7 +31,7 @@ jobs:
       - name: Select Xcode
         run: |
           set -euo pipefail
-          # TunaKit 1.14.0 ships a Swift 6.4 module interface. macos-15's default
+          # TunaKit 1.22.0 ships a Swift 6.4 module interface. macos-15's default
           # Xcode is 16.4, so pick the newest Xcode 16+ installed on the image.
           selected="$(python3 .github/select-newest-xcode.py)"
           echo "Using $selected"
@@ -40,25 +43,55 @@ jobs:
       - name: Test CurrencyCore
         run: swift test --package-path CurrencyExtension/CurrencyCore
 
-      - name: Disable certificate signing
-        run: |
-          printf '%s\n' \
-            'CODE_SIGNING_ALLOWED = NO' \
-            'CODE_SIGNING_REQUIRED = NO' \
-            'CODE_SIGN_IDENTITY = -' \
-            'DEVELOPMENT_TEAM =' \
-            > "$RUNNER_TEMP/ci-signing.xcconfig"
-          printf 'XCODE_XCCONFIG_FILE=%s\n' "$RUNNER_TEMP/ci-signing.xcconfig" \
-            >> "$GITHUB_ENV"
-
       - name: Build CurrencyExtension
         run: |
+          set -euo pipefail
           xcodebuild build \
             -project CurrencyExtension/CurrencyExtension.xcodeproj \
             -scheme CurrencyExtension \
-            -configuration Debug \
+            -configuration Release \
             -destination 'generic/platform=macOS' \
-            CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGNING_REQUIRED=NO \
+            -derivedDataPath "$RUNNER_TEMP/dd" \
+            ONLY_ACTIVE_ARCH=NO \
+            ARCHS='arm64 x86_64' \
+            CODE_SIGN_STYLE=Manual \
             CODE_SIGN_IDENTITY=- \
+            CODE_SIGNING_REQUIRED=NO \
             DEVELOPMENT_TEAM=
+
+      - name: Ad-hoc sign and zip the framework
+        run: |
+          set -euo pipefail
+          settings="$(mktemp)"
+          xcodebuild \
+            -project CurrencyExtension/CurrencyExtension.xcodeproj \
+            -scheme CurrencyExtension \
+            -configuration Release \
+            -destination 'generic/platform=macOS' \
+            -derivedDataPath "$RUNNER_TEMP/dd" \
+            ONLY_ACTIVE_ARCH=NO \
+            ARCHS='arm64 x86_64' \
+            CODE_SIGN_STYLE=Manual \
+            CODE_SIGN_IDENTITY=- \
+            CODE_SIGNING_REQUIRED=NO \
+            DEVELOPMENT_TEAM= \
+            -showBuildSettings >"$settings"
+          target_build_dir="$(grep -m1 '^ *TARGET_BUILD_DIR = ' "$settings" | sed 's/.*= //')"
+          product_name="$(grep -m1 '^ *FULL_PRODUCT_NAME = ' "$settings" | sed 's/.*= //')"
+          framework="$target_build_dir/$product_name"
+          test -d "$framework"
+          # Tuna loads manual installs with library validation disabled. Ad-hoc
+          # signing matches scripts/install-dev-bundle.sh when no team is set.
+          codesign --force --sign - --timestamp=none "$framework"
+          codesign -dv --verbose=2 "$framework"
+          mkdir -p dist
+          # ditto keeps the framework's symlinks, which a plain zip of the bundle can drop.
+          ditto -c -k --keepParent "$framework" dist/CurrencyExtension.framework.zip
+          unzip -l dist/CurrencyExtension.framework.zip | grep 'CurrencyExtension.framework/Versions/A/CurrencyExtension'
+
+      - name: Upload importable framework
+        uses: actions/upload-artifact@v7
+        with:
+          name: CurrencyExtension
+          path: dist/CurrencyExtension.framework.zip
+          if-no-files-found: error
