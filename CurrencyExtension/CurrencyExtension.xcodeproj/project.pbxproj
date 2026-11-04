@@ -1,0 +1,190 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {};
+	objectVersion = 60;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		C10000000000000000000001 /* CurrencyExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C20000000000000000000001 /* CurrencyExtension.swift */; };
+		C10000000000000000000002 /* CurrencyActionsCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = C20000000000000000000002 /* CurrencyActionsCatalog.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		C20000000000000000000001 /* CurrencyExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyExtension.swift; sourceTree = "<group>"; };
+		C20000000000000000000002 /* CurrencyActionsCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyActionsCatalog.swift; sourceTree = "<group>"; };
+		C20000000000000000000003 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C20000000000000000000004 /* CurrencyExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CurrencyExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C30000000000000000000001 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		C40000000000000000000001 = {
+			isa = PBXGroup;
+			children = (
+				C40000000000000000000002 /* CurrencyExtension */,
+				C40000000000000000000003 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C40000000000000000000002 /* CurrencyExtension */ = {
+			isa = PBXGroup;
+			children = (
+				C20000000000000000000001 /* CurrencyExtension.swift */,
+				C20000000000000000000002 /* CurrencyActionsCatalog.swift */,
+				C20000000000000000000003 /* Info.plist */,
+			);
+			sourceTree = "<group>";
+		};
+		C40000000000000000000003 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C20000000000000000000004 /* CurrencyExtension.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C50000000000000000000001 /* CurrencyExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CA0000000000000000000001 /* Build configuration list for PBXNativeTarget "CurrencyExtension" */;
+			buildPhases = (
+				C80000000000000000000001 /* Sources */,
+				C30000000000000000000001 /* Frameworks */,
+				C70000000000000000000001 /* Resources */,
+			);
+			buildRules = ();
+			dependencies = ();
+			name = CurrencyExtension;
+			packageProductDependencies = (
+				CC0000000000000000000001 /* TunaKit */,
+				CC0000000000000000000002 /* CurrencyCore */,
+			);
+			productName = CurrencyExtension;
+			productReference = C20000000000000000000004 /* CurrencyExtension.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C60000000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = { C50000000000000000000001 = { CreatedOnToolsVersion = 16.0; }; };
+			};
+			buildConfigurationList = CA0000000000000000000002 /* Build configuration list for PBXProject "CurrencyExtension" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (en);
+			mainGroup = C40000000000000000000001;
+			packageReferences = (
+				CB0000000000000000000001 /* XCRemoteSwiftPackageReference "TunaKit" */,
+				CB0000000000000000000002 /* XCLocalSwiftPackageReference "CurrencyCore" */,
+			);
+			productRefGroup = C40000000000000000000003 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C50000000000000000000001 /* CurrencyExtension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C70000000000000000000001 /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C80000000000000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C10000000000000000000001 /* CurrencyExtension.swift in Sources */,
+				C10000000000000000000002 /* CurrencyActionsCatalog.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		C90000000000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = DDB8SQMXS9;
+				ENABLE_TESTABILITY = YES;
+				INFOPLIST_FILE = Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@loader_path/Frameworks");
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.masalaempire.tuna.plugins.currency;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		C90000000000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = DDB8SQMXS9;
+				INFOPLIST_FILE = Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@loader_path/Frameworks");
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.masalaempire.tuna.plugins.currency;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		C90000000000000000000003 /* Debug */ = {isa = XCBuildConfiguration; buildSettings = { PRODUCT_NAME = CurrencyExtension; }; name = Debug; };
+		C90000000000000000000004 /* Release */ = {isa = XCBuildConfiguration; buildSettings = { PRODUCT_NAME = CurrencyExtension; }; name = Release; };
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		CA0000000000000000000001 /* Build configuration list for PBXNativeTarget "CurrencyExtension" */ = {isa = XCConfigurationList; buildConfigurations = (C90000000000000000000001 /* Debug */, C90000000000000000000002 /* Release */); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+		CA0000000000000000000002 /* Build configuration list for PBXProject "CurrencyExtension" */ = {isa = XCConfigurationList; buildConfigurations = (C90000000000000000000003 /* Debug */, C90000000000000000000004 /* Release */); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		CB0000000000000000000002 /* XCLocalSwiftPackageReference "CurrencyCore" */ = {isa = XCLocalSwiftPackageReference; relativePath = ../CurrencyCore; };
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		CB0000000000000000000001 /* XCRemoteSwiftPackageReference "TunaKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/tunaformac/TunaKit";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 1.14.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CC0000000000000000000001 /* TunaKit */ = {isa = XCSwiftPackageProductDependency; package = CB0000000000000000000001 /* XCRemoteSwiftPackageReference "TunaKit" */; productName = TunaKit; };
+		CC0000000000000000000002 /* CurrencyCore */ = {isa = XCSwiftPackageProductDependency; package = CB0000000000000000000002 /* XCLocalSwiftPackageReference "CurrencyCore" */; productName = CurrencyCore; };
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = C60000000000000000000001 /* Project object */;
+}

@@ -38,6 +38,7 @@ below rather than a generic template, and include the new project in `TunaExtens
 | BrewExtension | Search and manage Homebrew packages |
 | ChromeExtension | Browse Chrome bookmarks and launch profiles |
 | CleanShotExtension | Browse recent CleanShot images and run capture commands |
+| CurrencyExtension | Convert an amount between currencies (parser and rates client; action is still a stub) |
 | FancyTextExtension | Turn text into searchable Unicode styles |
 | GitHubExtension | Repos, issues, and pull requests |
 | GiphyExtension | Search, preview, and paste GIFs from GIPHY |
@@ -65,6 +66,12 @@ make ext-local TARGETS="MyMind Safari" TUNA_ROOT=/absolute/path/to/Tuna
 make ext-local TARGET=MyMind TUNA_ROOT=/absolute/path/to/Tuna CONFIGURATION=Release
 ./scripts/tuna-extension install --scheme ObsidianExtension
 ```
+
+`CurrencyExtension` is the exception to the commands above. It pins TunaKit 1.14.0 for Tuna 0.80,
+so it is not part of `make`, `make test`, or `release-all`. Test its Foundation-only `CurrencyCore`
+package with `swift test --package-path CurrencyExtension/CurrencyCore`, and build the
+`CurrencyExtension` scheme with `xcodebuild`. The `currency` GitHub Actions workflow does both on
+`macos-15`.
 
 Open `TunaExtensions.xcworkspace` for Xcode work. After a dev install, restart Tuna to load changed
 extension code. `ext-local` and `ext-all-local` create an ignored, temporary binary package from
