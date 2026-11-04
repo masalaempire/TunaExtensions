@@ -4,8 +4,8 @@ A personal [Tuna](https://tunaformac.com) extension that converts an amount from
 another. This fork keeps only that extension. It targets Tuna 0.80 and TunaKit 1.14.0, and it
 builds with Xcode 16 or later on macOS 15 or later.
 
-**Convert Currency** is declared and nothing more. It accepts a text snippet and returns a failure
-until a follow-up wires it to the parser and rates client.
+**Convert Currency** runs on text such as `100 usd eur`. It returns one copyable amount per target
+currency and reads a default target (EUR) from the extension setting when the text has none.
 
 ## CurrencyCore
 
@@ -28,10 +28,20 @@ client returns the last cached table and reports the ECB date those rates came f
 
 ## Building and installing
 
+On a Mac with Xcode and Tuna 0.80, from this repository root:
+
+```bash
+./scripts/tuna-extension install --scheme CurrencyExtension --restart
+```
+
+The project ad-hoc signs, so the command does not need an Apple Developer team. It copies
+`CurrencyExtension.framework` into `~/Library/Application Support/Tuna/ExtensionsDev` and restarts
+Tuna. Details, plus how to import a workflow artifact, are in
+[CurrencyExtension/README.md](CurrencyExtension/README.md).
+
 ```bash
 make
 ./scripts/tuna-extension build --scheme CurrencyExtension
-./scripts/tuna-extension install --scheme CurrencyExtension
 make ext-local TARGET=CurrencyExtension TUNA_ROOT=/absolute/path/to/Tuna
 ```
 
@@ -41,11 +51,12 @@ package pin.
 
 TunaKit is pinned to `1.14.0` with an up-to-next-minor requirement. The package is in beta, so
 raise that pin only after reading its [changelog](https://github.com/tunaformac/TunaKit/blob/main/CHANGELOG.md).
+Tuna 0.95 and later do not load this pin.
 
 The `currency` GitHub Actions workflow is manual (`workflow_dispatch`). It is not a pull-request
-check. When run, it uses `macos-26-intel`, runs `swift test` for CurrencyCore, and builds the
-CurrencyExtension scheme with `xcodebuild` and code signing disabled. The extension's deployment
-target remains macOS 15.
+check. When run, it uses `macos-26-intel`, runs `swift test` for CurrencyCore, and uploads an
+ad-hoc signed universal `CurrencyExtension.framework` zip. The extension's deployment target
+remains macOS 15.
 
 ## Packaging
 
