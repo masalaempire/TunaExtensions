@@ -15,7 +15,10 @@ concurrency:
 jobs:
   currency:
     name: currency (macos-15)
-    runs-on: macos-15
+    # macos-15 is the arm64 image. GitHub cancelled that job without starting it
+    # ("not acquired by Runner of type hosted"). macos-15-intel is the same OS
+    # with Xcode 16+, and the Intel pool is the one that actually assigns a runner.
+    runs-on: macos-15-intel
     timeout-minutes: 30
 
     steps:

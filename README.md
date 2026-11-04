@@ -71,7 +71,7 @@ make ext-local TARGET=MyMind TUNA_ROOT=/absolute/path/to/Tuna CONFIGURATION=Rele
 so it is not part of `make`, `make test`, or `release-all`. Test its Foundation-only `CurrencyCore`
 package with `swift test --package-path CurrencyExtension/CurrencyCore`, and build the
 `CurrencyExtension` scheme with `xcodebuild`. The `currency` GitHub Actions workflow does both on
-`macos-15`.
+the `macos-15-intel` runner.
 
 Open `TunaExtensions.xcworkspace` for Xcode work. After a dev install, restart Tuna to load changed
 extension code. `ext-local` and `ext-all-local` create an ignored, temporary binary package from
