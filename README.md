@@ -1,162 +1,61 @@
-# TunaExtensions
+# CurrencyExtension
 
-First-party extensions for [Tuna](https://tunaformac.com), the macOS launcher.
-This repo is the source of truth for every first-party extension distributed through the
-Tuna store — and a set of real, working examples for building your own.
+A personal [Tuna](https://tunaformac.com) extension that converts an amount from one currency into
+another. This fork keeps only that extension. It targets Tuna 0.80 and TunaKit 1.14.0, and it
+builds with Xcode 16 or later on macOS 15 or later.
 
-Each extension is a folder with its own Xcode project, flat sources, and an
-`Extension` subclass that declares its catalogs in Swift. They all depend on
-[TunaKit](https://github.com/tunaformac/TunaKit) as a binary Swift package —
-exactly the setup a third-party extension uses.
+**Convert Currency** is declared and nothing more. It accepts a text snippet and returns a failure
+until a follow-up wires it to the parser and rates client.
 
-## Contribute an extension
+## CurrencyCore
 
-Give your coding agent the pasteable
-[`tuna-extension-authoring` skill](skills/tuna-extension-authoring/SKILL.md). It makes the agent
-inventory current examples, inspect the product being integrated, present a full design packet, and
-wait for your explicit approval before implementing anything.
-
-Extensions are developed together in this repository so they can follow current examples and ship
-through the same review and release process. Clone the repository, create your extension on a branch,
-and open a pull request when it is ready:
+`CurrencyExtension/CurrencyCore` is a Swift package with no TunaKit or AppKit dependency. Test it
+on Linux or macOS:
 
 ```bash
-git clone https://github.com/tunaformac/TunaExtensions.git
-cd TunaExtensions
-git switch -c add-example-extension
+swift test --package-path CurrencyExtension/CurrencyCore
+make test
 ```
 
-Read the [extension authoring guide](docs/extension-authoring.md) for prerequisites, current extension
-shapes, recipe files, project conventions, and validation. Start from the closest real extension
-below rather than a generic template, and include the new project in `TunaExtensions.xcworkspace`.
+The parser accepts an amount, a source currency, and optional targets (`100 usd eur`,
+`100 usd to eur`, `$100 in yen`, `€50 gbp`, `12.5 usd eur`, names such as `dollars` and `yen`,
+ISO codes in any case). Text that is not a conversion, including math, returns nil.
 
-## Extensions
+Rates come from the Frankfurter v1 API at `https://api.frankfurter.app/latest` (no API key, ECB
+reference rates). A successful response is cached on disk for 12 hours. When a refresh fails, the
+client returns the last cached table and reports the ECB date those rates came from. See
+[CurrencyExtension/README.md](CurrencyExtension/README.md).
 
-| Extension | What it does |
-| --- | --- |
-| ArenaExtension | Browse Are.na channels and save links or text |
-| BrewExtension | Search and manage Homebrew packages |
-| ChromeExtension | Browse Chrome bookmarks and launch profiles |
-| CleanShotExtension | Browse recent CleanShot images and run capture commands |
-| FancyTextExtension | Turn text into searchable Unicode styles |
-| GitHubExtension | Repos, issues, and pull requests |
-| GiphyExtension | Search, preview, and paste GIFs from GIPHY |
-| Messages2FAExtension | Find recent authentication codes from Apple Messages |
-| MusicExtension | Control Music, browse your library, and search Apple Music |
-| MyMindExtension | Search, browse, resolve, and save mymind objects |
-| NotesExtension | Apple Notes search |
-| NotionExtension | Notion pages and databases |
-| ObsidianExtension | Browse Obsidian vaults, folders, and notes |
-| PoofExtension | Find, paste, and manage Poof text snippets |
-| RemindersExtension | Search reminders and create them in specific lists |
-| SafariExtension | Safari bookmarks, reading list, tabs, and Last Download (Resolve by default, with file actions available) |
-| SpotifyExtension | Control Spotify, browse your library, and search Spotify |
-| ThingsExtension | Things to-dos and projects |
-
-## Building
+## Building and installing
 
 ```bash
-make                  # compile every extension (Release)
-make test             # run every extension unit-test target
-make ext-all          # build + install all into Tuna's ExtensionsDev for local development
-make ext-all-local TUNA_ROOT=/absolute/path/to/Tuna
-make ext-local TARGET=Safari TUNA_ROOT=/absolute/path/to/Tuna
-make ext-local TARGETS="MyMind Safari" TUNA_ROOT=/absolute/path/to/Tuna
-make ext-local TARGET=MyMind TUNA_ROOT=/absolute/path/to/Tuna CONFIGURATION=Release
-./scripts/tuna-extension install --scheme ObsidianExtension
+make
+./scripts/tuna-extension build --scheme CurrencyExtension
+./scripts/tuna-extension install --scheme CurrencyExtension
+make ext-local TARGET=CurrencyExtension TUNA_ROOT=/absolute/path/to/Tuna
 ```
 
 Open `TunaExtensions.xcworkspace` for Xcode work. After a dev install, restart Tuna to load changed
-extension code. `ext-local` and `ext-all-local` create an ignored, temporary binary package from
-the selected Tuna checkout without changing the projects or their checked-in package resolutions.
-Chromium-based browser extensions share their storage and launch primitives through the local,
-Foundation-only `ChromiumExtensionSupport` package while remaining separate store extensions.
-Targets accept exact schemes or short extension names; `GitHub` and `GitHubExtension` retain the
-load-bearing `TunaGitHub` scheme. `TARGETS` validates the full subset before preparing TunaKit once.
-Local Debug and Release builds use the host architecture to match the generated framework.
+extension code. `ext-local` builds against a local TunaKit checkout without changing the checked-in
+package pin.
 
-The temporary dependency rewrite accepts `Package.resolved` formats 1–3, preserves each project's
-resolved TunaKit version when pins differ, and requires exactly one recognized TunaKit project
-reference and resolved pin. Unexpected or ambiguous forms fail before Xcode runs.
-The release-backed `ext`, build, test, package, upload, and release commands continue to use the
-published TunaKit package.
+TunaKit is pinned to `1.14.0` with an up-to-next-minor requirement. The package is in beta, so
+raise that pin only after reading its [changelog](https://github.com/tunaformac/TunaKit/blob/main/CHANGELOG.md).
 
-Shared commands retain complete Xcode output under `build/xcodebuild` while keeping terminal output
-concise. If `xcsift` is installed it formats live build/test diagnostics; failures also print the
-first compiler errors and retained log path. Run `make test-release-scripts` for tooling-only
-changes, `make test-extensions` for extension tests, or `make test` for both.
+The `currency` GitHub Actions workflow is manual (`workflow_dispatch`). It is not a pull-request
+check. When run, it uses `macos-26-intel`, runs `swift test` for CurrencyCore, and builds the
+CurrencyExtension scheme with `xcodebuild` and code signing disabled. The extension's deployment
+target remains macOS 15.
 
-## TunaKit dependency
-
-Projects pin TunaKit with an up-to-next-minor requirement because TunaKit is
-in beta: breaking changes can land in minor releases and are called out in its
-[changelog](https://github.com/tunaformac/TunaKit/blob/main/CHANGELOG.md).
-Bump the pinned version deliberately, repo-wide, after reading the changelog.
-
-## Packaging and releasing (maintainers)
+## Packaging
 
 ```bash
-make release TARGET=ObsidianExtension
-make release-all
+make release TARGET=CurrencyExtension
 ```
 
-The command tests, builds, signs, uploads, downloads and verifies the public package, then creates
-and pushes its annotated tag. Before `release-all` publishes anything, it builds and packages every
-extension, preflights every candidate against the store, and verifies the complete release input
-set is still clean. It then verifies already-published matching versions and only uploads versions
-that are newer or need their bytes repaired.
-
-Packaging derives store metadata from the built bundle's Swift declaration,
-which requires a Tuna binary. It uses `TUNA_BINARY` when provided, then the debug build under an
-explicit `TUNA_ROOT`, then falls back to `/Applications/Tuna.app` and `~/Applications/Tuna.app`.
-When coordinating changes from a Tuna worktree, prefer Tuna's
-`scripts/tuna-extensions.sh <target>` wrapper; it passes both paths explicitly. A store icon belongs beside its sources at
-`<Extension>/icon.png` — every extension here has one. `media/icons/<id-or-slug>.<extension>` still
-works for icons curated outside an extension directory. Screenshots live at
-`media/screenshots/<id-or-slug>/*`. Media supplied by this tooling must be tracked; curated server
-media need not be duplicated here. `dist/store/` is generated output and is never used as a
-listing-media source.
-
-`make ext-package`, `make ext-upload`, `make release`, and `make release-all` sign packages
-with `op://Brainbow/Tuna/EXTENSIONS_STORE_SIGNING_PRIVATE_KEY` by default. Override that provider
-with `EXTENSIONS_STORE_SIGNING_PRIVATE_KEY_OP`, or set `SIGNING_KEY` to a PEM file directly.
-Packaging requires both `minTuna` and `minTunaKit` from the declaration or explicit `MIN_TUNA` and
-`MIN_TUNAKIT` overrides; it never invents either floor. Store categories are curated separately and
-are not copied from declarations.
-
-Uploads require the selected extension, `.gitignore`, `Makefile`, `scripts/`, and `media/` to remain
-clean before and after packaging, including staged and untracked files. `release-all` applies that
-check across every extension and every tracked `Package.resolved`, after preparing all packages and
-again after all store preflights. A release also refuses an existing version tag that does not point
-to the captured release commit; a matching tag makes reruns safe. Packages use fixed timestamps and
-sorted ZIP entries, so rerunning from the same source produces the same bytes. Releases made before
-deterministic packaging are compared by their signed manifest and payload contents when their outer
-ZIP bytes differ; compiler-dependent packages may also reuse their immutable public bytes when the
-extension source still matches its annotated tag.
-
-The uploader sends private snapshots of the package and tracked listing media; media bytes
-come from the captured release commit rather than mutable worktree paths, and ignored `dist/store/`
-output is never uploaded directly.
-
-Before uploading, the release command reads the public store item without authentication. An exact
-same-version release is accepted only when uploader-controlled metadata, expected listing media,
-and the public artifact's downloaded size and SHA-256 all match. Missing media, a missing artifact,
-or mismatched public bytes triggers a same-version recovery upload; controlled metadata drift still
-fails closed. After any upload, the response and a fresh public readback must match, and the public
-artifact is downloaded and verified again before a release tag can be created. Upload credentials
-are resolved only when a PUT is needed and are passed through a private curl configuration file;
-public metadata and artifact requests never receive the bearer header.
-
-For a non-interactive build with a contributor's Apple Development identity, pass both the team and
-the identity SHA-1 shown by `security find-identity -v -p codesigning`:
-
-```bash
-TUNA_DEVELOPMENT_TEAM=YOURTEAMID \
-TUNA_CODE_SIGN_IDENTITY=IDENTITY_SHA1 \
-  ./scripts/tuna-extension build --scheme ObsidianExtension --release
-```
-
-Docs for the extension API live at https://tunaformac.com/docs.
+Packaging reads `minTuna` and `minTunaKit` from the Swift declaration and needs a Tuna binary
+(`TUNA_BINARY`, a debug build under `TUNA_ROOT`, or `/Applications/Tuna.app`). Docs for the
+extension API live at https://tunaformac.com/docs.
 
 ## License
 
