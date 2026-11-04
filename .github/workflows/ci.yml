@@ -19,12 +19,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - arch: arm64
-            runner: macos-26
-            build_all: true
+          # macos-26 (arm64) was cancelled twice: no hosted runner accepted the job.
+          # This fork keeps the same test and build-all work on macos-26-intel.
           - arch: x86_64
             runner: macos-26-intel
-            build_all: false
+            build_all: true
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 60
     env:

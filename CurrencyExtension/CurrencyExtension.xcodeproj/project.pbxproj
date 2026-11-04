@@ -167,7 +167,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		CB0000000000000000000002 /* XCLocalSwiftPackageReference "CurrencyCore" */ = {isa = XCLocalSwiftPackageReference; relativePath = ../CurrencyCore; };
+		CB0000000000000000000002 /* XCLocalSwiftPackageReference "CurrencyCore" */ = {isa = XCLocalSwiftPackageReference; relativePath = CurrencyCore; };
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
