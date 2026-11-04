@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Print the newest Xcode 16 or later installed under /Applications."""
+"""Print the newest Xcode 27 or later (Swift 6.4 for TunaKit 1.22.0) installed under /Applications."""
 
 import pathlib
 import plistlib
@@ -24,10 +24,10 @@ def main():
     apps = [
         app
         for app in pathlib.Path("/Applications").glob("Xcode*.app")
-        if version(app) >= (16,)
+        if version(app) >= (27,)
     ]
     if not apps:
-        print("no Xcode 16 or newer found", file=sys.stderr)
+        print("TunaKit 1.22.0 requires Swift 6.4: no Xcode 27 or newer found", file=sys.stderr)
         return 1
     print(max(apps, key=version))
     return 0

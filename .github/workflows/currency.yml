@@ -12,15 +12,13 @@ concurrency:
 
 jobs:
   currency:
-    name: currency (macos-15)
-    # GitHub cancelled both macos-15 and macos-15-intel before a runner accepted
-    # them. macos-26-intel did accept a job. The extension still deploys to macOS 15
-    # and the image's Xcode is 16+. This job is manual only and is not a pull-request check.
-    runs-on: macos-26-intel
+    name: currency (Swift 6.4)
+    # TunaKit 1.22.0 requires Swift 6.4. macos-26 images only include Xcode 26.
+    # Cross-compile both architectures while retaining the macOS 15 deployment target.
+    runs-on: xcode-27
     timeout-minutes: 30
     permissions:
       contents: read
-      actions: write
 
     steps:
       - name: Checkout code
@@ -31,13 +29,11 @@ jobs:
       - name: Select Xcode
         run: |
           set -euo pipefail
-          # TunaKit 1.22.0 ships a Swift 6.4 module interface. macos-15's default
-          # Xcode is 16.4, so pick the newest Xcode 16+ installed on the image.
           selected="$(python3 .github/select-newest-xcode.py)"
           echo "Using $selected"
           echo "DEVELOPER_DIR=$selected/Contents/Developer" >> "$GITHUB_ENV"
           sudo xcode-select -s "$selected"
-          xcodebuild -version
+          ./scripts/run-xcodebuild --output - -- -version
           xcrun swift --version
 
       - name: Test CurrencyCore
@@ -46,7 +42,7 @@ jobs:
       - name: Build CurrencyExtension
         run: |
           set -euo pipefail
-          xcodebuild build \
+          ./scripts/run-xcodebuild build \
             -project CurrencyExtension/CurrencyExtension.xcodeproj \
             -scheme CurrencyExtension \
             -configuration Release \
@@ -63,7 +59,7 @@ jobs:
         run: |
           set -euo pipefail
           settings="$(mktemp)"
-          xcodebuild \
+          ./scripts/run-xcodebuild --output "$settings" -- \
             -project CurrencyExtension/CurrencyExtension.xcodeproj \
             -scheme CurrencyExtension \
             -configuration Release \
@@ -75,7 +71,7 @@ jobs:
             CODE_SIGN_IDENTITY=- \
             CODE_SIGNING_REQUIRED=NO \
             DEVELOPMENT_TEAM= \
-            -showBuildSettings >"$settings"
+            -showBuildSettings
           target_build_dir="$(grep -m1 '^ *TARGET_BUILD_DIR = ' "$settings" | sed 's/.*= //')"
           product_name="$(grep -m1 '^ *FULL_PRODUCT_NAME = ' "$settings" | sed 's/.*= //')"
           framework="$target_build_dir/$product_name"
@@ -95,3 +91,11 @@ jobs:
           name: CurrencyExtension
           path: dist/CurrencyExtension.framework.zip
           if-no-files-found: error
+
+      - name: Upload build logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: CurrencyExtension-build-logs
+          path: build/xcodebuild
+          if-no-files-found: ignore

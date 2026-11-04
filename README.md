@@ -1,8 +1,8 @@
 # CurrencyExtension
 
 A personal [Tuna](https://tunaformac.com) extension that converts an amount from one currency into
-another. This fork keeps only that extension. It targets Tuna 0.110 and TunaKit 1.22.0, and it
-builds with Xcode 16 or later on macOS 15 or later.
+another. This fork keeps only that extension. It targets Tuna 0.110 and TunaKit 1.22.0, and
+requires Xcode 27 or later (Swift 6.4) to build. The extension runs on macOS 15 or later.
 
 **Convert Currency** runs on text such as `100 usd eur`. It returns one copyable amount per target
 currency and reads a default target (EUR) from the extension setting when the text has none.
@@ -28,7 +28,7 @@ client returns the last cached table and reports the ECB date those rates came f
 
 ## Building and installing
 
-On a Mac with Xcode and Tuna 0.110, from this repository root:
+On a Mac with Xcode 27 or later and Tuna 0.110, from this repository root:
 
 ```bash
 ./scripts/tuna-extension install --scheme CurrencyExtension --restart
@@ -54,9 +54,13 @@ TunaKit is pinned to `1.22.0` with an up-to-next-minor requirement, the same pin
 raise that pin only after reading its [changelog](https://github.com/tunaformac/TunaKit/blob/main/CHANGELOG.md).
 
 The `currency` GitHub Actions workflow is manual (`workflow_dispatch`). It is not a pull-request
-check. When run, it uses `macos-26-intel`, runs `swift test` for CurrencyCore, and uploads an
+check. When run, it uses the `xcode-27` runner, runs `swift test` for CurrencyCore, and uploads an
 ad-hoc signed universal `CurrencyExtension.framework` zip. The extension's deployment target
-remains macOS 15.
+remains macOS 15. Build logs are uploaded even when compilation fails.
+
+TunaKit 1.22.0 contains a Swift 6.4 binary module interface; Xcode 26 and older cannot
+compile it. Xcode 27 requires macOS 26.6 or later on the build machine. To keep an older
+macOS version locally, run the Currency workflow and import its framework artifact instead.
 
 ## Packaging
 
