@@ -1,7 +1,7 @@
 # CurrencyExtension
 
 A personal [Tuna](https://tunaformac.com) extension that converts an amount from one currency into
-another. This fork keeps only that extension. It targets Tuna 0.80 and TunaKit 1.14.0, and it
+another. This fork keeps only that extension. It targets Tuna 0.110 and TunaKit 1.22.0, and it
 builds with Xcode 16 or later on macOS 15 or later.
 
 **Convert Currency** runs on text such as `100 usd eur`. It returns one copyable amount per target
@@ -28,7 +28,7 @@ client returns the last cached table and reports the ECB date those rates came f
 
 ## Building and installing
 
-On a Mac with Xcode and Tuna 0.80, from this repository root:
+On a Mac with Xcode and Tuna 0.110, from this repository root:
 
 ```bash
 ./scripts/tuna-extension install --scheme CurrencyExtension --restart
@@ -49,9 +49,9 @@ Open `TunaExtensions.xcworkspace` for Xcode work. After a dev install, restart T
 extension code. `ext-local` builds against a local TunaKit checkout without changing the checked-in
 package pin.
 
-TunaKit is pinned to `1.14.0` with an up-to-next-minor requirement. The package is in beta, so
+TunaKit is pinned to `1.22.0` with an up-to-next-minor requirement, the same pin as FancyText in
+[tunaformac/TunaExtensions](https://github.com/tunaformac/TunaExtensions). The package is in beta, so
 raise that pin only after reading its [changelog](https://github.com/tunaformac/TunaKit/blob/main/CHANGELOG.md).
-Tuna 0.95 and later do not load this pin.
 
 The `currency` GitHub Actions workflow is manual (`workflow_dispatch`). It is not a pull-request
 check. When run, it uses `macos-26-intel`, runs `swift test` for CurrencyCore, and uploads an

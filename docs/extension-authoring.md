@@ -23,9 +23,9 @@ and destructive actions should match your mental model before code makes them ex
 - `rg` (the repository scripts use ripgrep)
 - Network access for the released [TunaKit](https://github.com/tunaformac/TunaKit) package
 
-TunaKit is public beta. This repository currently pins `1.22.x`, except `CurrencyExtension`, which
-pins `1.14.0` for Tuna 0.80. Always confirm the current pin in the extension projects and read the
-TunaKit changelog before raising it. Claim only compatibility floors you test.
+TunaKit is public beta. This repository pins `1.22.0`. Always confirm the current pin in the
+extension project and read the TunaKit changelog before raising it. Claim only compatibility floors
+you test.
 
 ## Start an extension
 

@@ -13,8 +13,8 @@ public final class CurrencyExtension: Extension {
         iconName: "coloncurrencysign"
       ),
       compatibility: ExtensionDeclarationCompatibility(
-        minTuna: "0.80",
-        minTunaKit: "1.14.0"
+        minTuna: "0.110",
+        minTunaKit: "1.22.0"
       ),
       settings: [CurrencySettings.defaultTarget],
       actionCatalogs: [
@@ -29,7 +29,8 @@ public final class CurrencyExtension: Extension {
 }
 
 enum CurrencySettings {
-  /// Extension-wide setting. Action catalogs cannot declare settings on TunaKit 1.14.
+  /// Action catalogs still cannot declare settings. This lives on the extension and shows
+  /// on the Currency page in Settings → Sources.
   static let defaultTarget = CatalogSettingDefinition(
     key: "DefaultTargetCurrency",
     type: .string,

@@ -2,6 +2,7 @@
 
 ## 0.2
 
+- Target Tuna 0.110 and TunaKit 1.22.0. Convert Currency uses the async action callback and `textInputValue()`.
 - Convert Currency parses the typed text snippet and returns one copyable amount per target currency.
 - Add a default target currency setting, EUR unless changed.
 - Show the ECB rate date, and say when that date came from the offline cache.

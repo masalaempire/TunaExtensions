@@ -2,9 +2,9 @@
 
 Convert an amount from one currency into one or more others inside Tuna.
 
-Requires Tuna 0.80 and TunaKit 1.14.0. Build with Xcode 16 or later on macOS 15 or later.
-This extension pins TunaKit 1.14.0 on purpose. Tuna 0.95 and later refuse extensions built
-against TunaKit 1.20 or earlier, so import this build into Tuna 0.80.
+Requires Tuna 0.110 and TunaKit 1.22.0. Build with Xcode 16 or later on macOS 15 or later.
+TunaKit is pinned to 1.22.0, the same revision FancyText uses on tunaformac/TunaExtensions.
+Tuna 0.95 and later do not load extensions built against TunaKit 1.20 or earlier.
 
 Type an amount and a currency in Tuna's text mode, for example `100usd eur`, and press Return.
 **Convert Currency** appears only when that text parses as a conversion. It returns one result
@@ -15,10 +15,10 @@ cannot be reached and there is no saved table, the action shows an inline error.
 
 ## Setting
 
-**Default target currency** is an extension setting (action catalogs cannot carry settings on
-TunaKit 1.14). It defaults to EUR. Text with no target, such as `100 usd`, converts into that
-currency. Change it in Tuna's settings for the Currency extension. The value is also the
-`DefaultTargetCurrency` key under this extension's bundle id,
+**Default target currency** is an extension setting. Action catalogs still cannot carry settings,
+so it is declared on the extension and shown on the Currency page in Settings → Sources. It
+defaults to EUR. Text with no target, such as `100 usd`, converts into that currency. The value
+is also the `DefaultTargetCurrency` key under this extension's bundle id,
 `com.masalaempire.tuna.plugins.currency`, in `config.toml`.
 
 ## CurrencyCore
@@ -51,7 +51,7 @@ per base currency in `~/Library/Application Support/Tuna/CurrencyExtension`.
 
 ## Install from this checkout
 
-From the repository root, on a Mac with Xcode and Tuna 0.80:
+From the repository root, on a Mac with Xcode and Tuna 0.110:
 
 ```bash
 ./scripts/tuna-extension install --scheme CurrencyExtension --restart
@@ -75,8 +75,7 @@ Both accept this extension's `CurrencyExtension.framework`. A `.tunaextension` i
 declaration, and the store path also checks a store signature. The manual framework import does not.
 Tuna then asks you to confirm, because a file installed from disk is not verified by the store.
 
-On Tuna 0.80 the control is in Settings → Extension Store. Tuna 0.95 moved the store under
-Sources → Get More and will not load this TunaKit 1.14 build.
+On Tuna 0.110 the store is Settings → Sources → Get More….
 
 The Currency GitHub Actions workflow is manual (`workflow_dispatch` only, not a pull-request check).
 It runs on `macos-26-intel`, tests CurrencyCore, and builds a universal Release framework
@@ -93,7 +92,7 @@ ditto -x -k CurrencyExtension.framework.zip ~/Downloads
 xattr -dr com.apple.quarantine ~/Downloads/CurrencyExtension.framework
 ```
 
-4. In Tuna 0.80, open Settings → Extension Store.
+4. In Tuna 0.110, open Settings → Sources → Get More….
 5. Use import file and choose `CurrencyExtension.framework`, or use import directory and choose
    either that framework or a folder whose only bundle is that framework.
 6. Confirm the install. Restart Tuna if the extension is installed but not loaded.
@@ -111,5 +110,4 @@ xcodebuild build \
   DEVELOPMENT_TEAM=
 ```
 
-This scheme is not part of `make` or `release-all`. Those commands are for a TunaKit 1.22 checkout.
-This fork only contains CurrencyExtension.
+This fork only contains CurrencyExtension. `make` builds this scheme.

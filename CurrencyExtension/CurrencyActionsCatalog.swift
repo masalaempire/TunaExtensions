@@ -15,44 +15,29 @@ public final class CurrencyActionsCatalog: ActionCatalog {
   }
 
   private static func makeConvertCurrencyAction() -> CatalogAction {
-    let action = PredicateAwareAction(
-      id: "convert-currency",
-      title: "Convert Currency",
-      type: .action
-    ) { subject, _ in
-      CurrencyActionRunner.result(for: subject)
+    let action = PredicateAwareAction(id: "convert-currency", title: "Convert Currency") { subject, _ in
+      await CurrencyActionRunner.result(for: subject)
     }
     action.systemSymbolName = "coloncurrencysign"
     action.supportedSubjectTypes = [.textSnippet]
-    action.producesInlineResult = true
-    action.commitStyleDependsOnResult = true
+    action.executionPolicy = .keepVisible
     action.subjectPredicate = { subject in
-      guard let text = (subject as? TextSnippetItem)?.text else { return false }
+      guard let text = subject?.textInputValue(), !text.isEmpty else { return false }
       return CurrencyParser.parse(text, defaultTarget: CurrencySettings.defaultTargetText()) != nil
     }
     return action
   }
 }
 
-/// TunaKit 1.14 action callbacks are synchronous. The rate fetch finishes before this returns,
-/// so the callback can hand back the result list or the inline error.
 enum CurrencyActionRunner {
-  static func result(for subject: CatalogItem) -> ActionResult {
-    guard let text = (subject as? TextSnippetItem)?.text else {
+  static func result(for subject: CatalogItem) async -> ActionResult {
+    guard let text = subject.textInputValue(), !text.isEmpty else {
       return .failure("Type an amount and a currency, such as 100 usd eur.")
     }
     guard let query = CurrencyParser.parse(text, defaultTarget: CurrencySettings.defaultTargetText()) else {
       return .failure("That text is not a currency conversion.")
     }
-
-    let box = ResultBox()
-    let semaphore = DispatchSemaphore(value: 0)
-    Task.detached(priority: .userInitiated) {
-      box.result = await fetch(query)
-      semaphore.signal()
-    }
-    semaphore.wait()
-    return box.result ?? .failure(CurrencyRatesError.offlineUnavailable.inlineMessage)
+    return await fetch(query)
   }
 
   private static func fetch(_ query: CurrencyQuery) async -> ActionResult {
@@ -86,21 +71,17 @@ enum CurrencyActionRunner {
   }()
 }
 
-private final class ResultBox: @unchecked Sendable {
-  var result: ActionResult?
-}
-
 final class CurrencyAmountItem: CatalogItem, TextValueProviding, CopyRepresentationProviding, @unchecked Sendable {
   let textValue: String
   let copyRepresentation: String?
   private let detailText: String
-  private let searchTextValue: String
+  private let keys: [String]
 
   init(line: CurrencyConversionLine, index: Int) {
     textValue = line.copyText
     copyRepresentation = line.copyText
     detailText = line.detail
-    searchTextValue = "\(line.copyText) \(line.target.rawValue)"
+    keys = [line.copyText, line.target.rawValue]
     super.init(
       id: "currency:\(index):\(line.target.rawValue):\(line.copyText)",
       title: line.title,
@@ -110,5 +91,5 @@ final class CurrencyAmountItem: CatalogItem, TextValueProviding, CopyRepresentat
   }
 
   override var detail: String? { detailText }
-  override var searchText: String { searchTextValue }
+  override var searchKeys: [String] { keys }
 }
