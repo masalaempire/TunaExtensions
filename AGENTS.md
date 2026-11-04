@@ -25,11 +25,12 @@ caller's current directory.
 
 ## Tooling gates
 
-- Release/path tooling only: `make -C "$EXTENSIONS_ROOT" test-release-scripts`
-- All extension unit tests: `make -C "$EXTENSIONS_ROOT" test-extensions`
-- Full test gate: `make -C "$EXTENSIONS_ROOT" test`
-- Release build of every extension: `make -C "$EXTENSIONS_ROOT"`
+This fork contains CurrencyExtension only.
 
-Use `./scripts/tuna-extension build|install --scheme <Scheme>` for one extension. Xcode commands
-belong behind `scripts/run-xcodebuild`; it retains complete logs under `build/xcodebuild`, uses
-`xcsift` for builds and tests when installed, and prints concise failure diagnostics.
+- Core unit tests: `make -C "$EXTENSIONS_ROOT" test`
+- Release build: `make -C "$EXTENSIONS_ROOT"`
+- One extension: `./scripts/tuna-extension build|install --scheme CurrencyExtension`
+
+Xcode commands belong behind `scripts/run-xcodebuild`; it retains complete logs under
+`build/xcodebuild`, uses `xcsift` for builds and tests when installed, and prints concise failure
+diagnostics.

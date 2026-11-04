@@ -2,60 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:ArenaExtension/ArenaExtension.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:BrewExtension/BrewExtension.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:ChromeExtension/ChromeExtension.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:CleanShotExtension/CleanShotExtension.xcodeproj">
-   </FileRef>
-   <FileRef
       location = "group:CurrencyExtension/CurrencyExtension.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:FancyTextExtension/FancyTextExtension.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:GitHubExtension/GitHubExtension.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:GiphyExtension/GiphyExtension.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:Messages2FAExtension/Messages2FAExtension.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:MusicExtension/MusicExtension.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:MyMindExtension/MyMindExtension.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:NotesExtension/NotesExtension.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:NotionExtension/NotionExtension.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:ObsidianExtension/ObsidianExtension.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:PoofExtension/PoofExtension.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:RemindersExtension/RemindersExtension.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:SafariExtension/SafariExtension.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:SpotifyExtension/SpotifyExtension.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:ThingsExtension/ThingsExtension.xcodeproj">
    </FileRef>
 </Workspace>
