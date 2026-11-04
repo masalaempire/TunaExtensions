@@ -15,10 +15,10 @@ concurrency:
 jobs:
   currency:
     name: currency (macos-15)
-    # macos-15 is the arm64 image. GitHub cancelled that job without starting it
-    # ("not acquired by Runner of type hosted"). macos-15-intel is the same OS
-    # with Xcode 16+, and the Intel pool is the one that actually assigns a runner.
-    runs-on: macos-15-intel
+    # GitHub cancelled both macos-15 and macos-15-intel before a runner accepted
+    # them. macos-26-intel did accept a job. The extension still deploys to macOS 15
+    # and the image's Xcode is 16+.
+    runs-on: macos-26-intel
     timeout-minutes: 30
 
     steps:

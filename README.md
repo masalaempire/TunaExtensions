@@ -42,9 +42,10 @@ package pin.
 TunaKit is pinned to `1.14.0` with an up-to-next-minor requirement. The package is in beta, so
 raise that pin only after reading its [changelog](https://github.com/tunaformac/TunaKit/blob/main/CHANGELOG.md).
 
-CI is the `currency` GitHub Actions workflow. It runs on the `macos-15-intel` runner (macOS 15,
-Xcode 16+), executes `swift test` for CurrencyCore, and builds the CurrencyExtension scheme with
-`xcodebuild` and code signing disabled.
+CI is the `currency` GitHub Actions workflow. It runs on `macos-26-intel` because the macOS 15
+runner pools were cancelled before a machine accepted the job. The image still has Xcode 16 or
+later, and the extension's deployment target remains macOS 15. The workflow runs `swift test` for
+CurrencyCore and builds the CurrencyExtension scheme with `xcodebuild` and code signing disabled.
 
 ## Packaging
 

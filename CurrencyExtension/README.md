@@ -47,4 +47,4 @@ xcodebuild build \
 ```
 
 This scheme is not part of `make` or `release-all`. Those commands build the TunaKit 1.22 extensions.
-The `currency` GitHub Actions workflow runs the package tests and this xcodebuild on the `macos-15-intel` runner (macOS 15, Xcode 16+).
+The `currency` GitHub Actions workflow runs the package tests and this xcodebuild on `macos-26-intel`. The extension's deployment target remains macOS 15.
