@@ -2,8 +2,6 @@ name: Currency
 
 on:
   workflow_dispatch:
-  push:
-    branches: [codex/currency-swift64-ci]
 
 permissions:
   contents: read

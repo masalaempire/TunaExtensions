@@ -1,7 +1,7 @@
 # CurrencyExtension
 
 A personal [Tuna](https://tunaformac.com) extension that converts an amount from one currency into
-another. This fork keeps only that extension. It targets Tuna 0.110 and TunaKit 1.22.0, and it
+another. This fork keeps only that extension. It targets Tuna 0.110 and TunaKit 1.22.0, and
 requires Xcode 27 or later (Swift 6.4) to build. The extension runs on macOS 15 or later.
 
 **Convert Currency** runs on text such as `100 usd eur`. It returns one copyable amount per target

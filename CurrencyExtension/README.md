@@ -2,7 +2,8 @@
 
 Convert an amount from one currency into one or more others inside Tuna.
 
-Requires Tuna 0.110 and TunaKit 1.22.0. Build with Xcode 27 or later (Swift 6.4). The extension runs on macOS 15 or later.
+Requires Tuna 0.110 and TunaKit 1.22.0. Build with Xcode 27 or later (Swift 6.4).
+The extension runs on macOS 15 or later.
 TunaKit is pinned to 1.22.0, the same revision FancyText uses on tunaformac/TunaExtensions.
 Tuna 0.95 and later do not load extensions built against TunaKit 1.20 or earlier.
 
@@ -78,8 +79,8 @@ Tuna then asks you to confirm, because a file installed from disk is not verifie
 On Tuna 0.110 the store is Settings → Sources → Get More….
 
 The Currency GitHub Actions workflow is manual (`workflow_dispatch` only, not a pull-request check).
-It runs on `xcode-27`, selects Xcode 27 or later, tests CurrencyCore, and builds a universal Release framework
-(arm64 and x86_64) with an ad-hoc signature. The deployment target stays macOS 15. The
+It runs on `xcode-27`, selects Xcode 27 or later, tests CurrencyCore, and builds a universal
+Release framework (arm64 and x86_64) with an ad-hoc signature. The deployment target stays macOS 15. The
 `CurrencyExtension` artifact is `CurrencyExtension.framework.zip`, made with `ditto` so the
 framework symlinks survive. Build logs are uploaded even when compilation fails.
 
