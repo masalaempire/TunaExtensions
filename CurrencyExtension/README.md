@@ -2,7 +2,7 @@
 
 Convert an amount from one currency into one or more others inside Tuna.
 
-Requires Tuna 0.110 and TunaKit 1.22.0. Build with Xcode 16 or later on macOS 15 or later.
+Requires Tuna 0.110 and TunaKit 1.22.0. Build with Xcode 27 or later (Swift 6.4). The extension runs on macOS 15 or later.
 TunaKit is pinned to 1.22.0, the same revision FancyText uses on tunaformac/TunaExtensions.
 Tuna 0.95 and later do not load extensions built against TunaKit 1.20 or earlier.
 
@@ -51,7 +51,7 @@ per base currency in `~/Library/Application Support/Tuna/CurrencyExtension`.
 
 ## Install from this checkout
 
-From the repository root, on a Mac with Xcode and Tuna 0.110:
+From the repository root, on a Mac with Xcode 27 or later and Tuna 0.110:
 
 ```bash
 ./scripts/tuna-extension install --scheme CurrencyExtension --restart
@@ -78,10 +78,14 @@ Tuna then asks you to confirm, because a file installed from disk is not verifie
 On Tuna 0.110 the store is Settings → Sources → Get More….
 
 The Currency GitHub Actions workflow is manual (`workflow_dispatch` only, not a pull-request check).
-It runs on `macos-26-intel`, tests CurrencyCore, and builds a universal Release framework
+It runs on `xcode-27`, selects Xcode 27 or later, tests CurrencyCore, and builds a universal Release framework
 (arm64 and x86_64) with an ad-hoc signature. The deployment target stays macOS 15. The
 `CurrencyExtension` artifact is `CurrencyExtension.framework.zip`, made with `ditto` so the
-framework symlinks survive.
+framework symlinks survive. Build logs are uploaded even when compilation fails.
+
+TunaKit 1.22.0 ships a Swift 6.4 module interface, so Xcode 26 and older cannot build it.
+Local builds with Xcode 27 require macOS 26.6 or later. The CI artifact is an alternative
+for Macs running older macOS versions; its deployment target remains macOS 15.
 
 1. Run the Currency workflow on the branch you want and download the `CurrencyExtension` artifact.
 2. Unzip GitHub's download. Inside is `CurrencyExtension.framework.zip`.
